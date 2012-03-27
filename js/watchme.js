@@ -19,12 +19,13 @@ var oldRecords = new Object();
 var forceMapUpdate = false; // when a person changes force an update
 
 // data points needed for operation
-var application = new Object();
-application.deviceUuid = "";
-application.token = "";
-application.key = "";
-application.platform = "";
-application.broadcastOwner = "";
+var application = {
+		deviceUuid: "",
+		token: "",
+		key: "",
+		platform: "",
+		broadcastOwner: ""
+	}
 
 // state variables
 var sendFlag = false; // denotes whether to transmit location or not

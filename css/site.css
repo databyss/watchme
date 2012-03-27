@@ -1,0 +1,30 @@
+#appWindow {
+	max-width: 960px;
+	margin: auto;
+}
+
+#inputScreen {
+	max-width: 400px;
+	margin: auto;
+}
+
+.inputForm {
+	background-color: #FFFDB2;
+	padding: 20px;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	border: 2px solid #FFBD44;
+}
+
+.inputForm .formTitle {
+	margin: auto;
+	font-size: 36px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
+
+.inputForm .formLabel {
+	font-size: 18px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}

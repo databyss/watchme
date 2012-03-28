@@ -70,8 +70,29 @@ Application.prototype.unpause = function () {
 	this.state.pause = false;
 }
 
+Application.prototype.startTransmiting = function () {
+	this.state.sending = true;
+}
+
+Application.prototype.endTransmiting = function () {
+	this.state.sending = false;
+	// Delete records from this owner
+}
+
+Application.prototype.startReceiving = function () {
+	this.state.receiving = true;
+}
+
+Application.prototype.endReceiving = function () {
+	this.state.receiving = false;
+}
+
 Application.prototype.deleteBroadcast = function () {
 	this.broadcast = null;
+	this.state.sending = false;
+	this.state.receiving = false;
+	this.state.updating = false;
+	this.state.paused = false;
 }
 
 Application.prototype.startBroadcast = function (code) {

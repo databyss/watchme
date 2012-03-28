@@ -110,9 +110,6 @@ function watchButton() {
 
 function stopButton() {
 	// update status
-	sendFlag = false;
-	getFlag = false;
-	updateFlag = false;
 	navigator.geolocation.clearWatch(geoWatcher);
 	geoWatcher = false;
 	
@@ -124,29 +121,25 @@ function stopButton() {
 	clearForms();
 	$('#sendButton').text('Broadcast Location');
 
-	// Delete this broadcast if i am the owner
-	if(application.broadcastOwner == application.deviceUuid) {
-		deleteBroadcast(application.deviceUuid);
-	} else {
-		// otherewise delete my entry
-		deleteOwnerRecords(application.deviceUuid);
-	}
+	app.deleteBroadcast();
 }
 
 function toggleBroadcast() {
 	var buttonText = $('#sendButton').text();
 	
+	// handle button text
 	if(buttonText == 'Broadcast Location') {
 		$('#sendButton').text('Stop Broadcasting Location');
-		sendFlag = true;
+		
+		app.startTransmiting();
 	} else {
 		$('#sendButton').text('Broadcast Location');
-		sendFlag = false;
+		
+		// disable watcher
 		navigator.geolocation.clearWatch(geoWatcher);
 		geoWatcher = false;
-		
-		// Delete records from this owner
-		deleteOwnerRecords(application.deviceUuid);
+
+		app.endTransmiting();		
 	}
 }
 

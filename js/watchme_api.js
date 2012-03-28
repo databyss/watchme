@@ -75,7 +75,7 @@ Application.prototype.deleteBroadcast = function () {
 }
 
 Application.prototype.startBroadcast = function (code) {
-	if(this.broadcast !== null) {
+	if(this.broadcast === null) {
 		if (this.user !== null) {
 			this.broadcast = new Broadcast(code, this.user);
 		} else {
@@ -88,7 +88,7 @@ Application.prototype.startBroadcast = function (code) {
 }
 
 Application.prototype.watchBroadcast = function (key, code) {
-	if(this.broadcast !== null) {
+	if(this.broadcast === null) {
 		// watch broadcast
 	} else {
 		console.log('Broadcast already exists, delete first.');

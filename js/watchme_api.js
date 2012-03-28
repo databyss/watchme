@@ -42,24 +42,56 @@ Broadcast.prototype.initialize = function(code, owner) {
 // END BROADCAST CODE
 
 // APPLICATION CODE
-function Application () {
+function Application (user, platform) {
 	this.user =  null;
-	this.broadcast = [];
+	this.platform = null;
+	this.broadcast = null;
 	this.state = {
 		sending: false,
 		receiving: false,
-		updating: false
+		updating: false,
+		paused: false
 	};
 	
-	this.initialize();
+	this.initialize(user, platform);
 }
 
-Application.prototype.initialize = function () {
+Application.prototype.initialize = function (user, platform) {
 	console.log('Application initialize.');
+	this.user = user;
+	this.platform = platform;
 }
 
-Application.prototype.addBroadcast = function (code, owner) {
-	var b = new Broadcast(code, owner);
-	this.broadcast.push(b);
+Application.prototype.pause = function () {
+	this.state.pause = true;
+}
+
+Application.prototype.unpause = function () {
+	this.state.pause = false;
+}
+
+Application.prototype.deleteBroadcast = function () {
+	this.broadcast = null;
+}
+
+Application.prototype.startBroadcast = function (code) {
+	if(this.broadcast !== null) {
+		if (this.user !== null) {
+			this.broadcast = new Broadcast(code, this.user);
+		} else {
+			// error message about no valid user
+			console.log('application user not set.');
+		}
+	} else {
+		console.log('Broadcast already exists, delete first.');
+	}
+}
+
+Application.prototype.watchBroadcast = function (key, code) {
+	if(this.broadcast !== null) {
+		// watch broadcast
+	} else {
+		console.log('Broadcast already exists, delete first.');
+	}
 }
 // END APPLICATION CODE

@@ -18,46 +18,44 @@ var markers = new Object();
 var oldRecords = new Object();
 var forceMapUpdate = false; // when a person changes force an update
 
-// data points needed for operation
-var app = new Application();
-
-// state variables
-var sendFlag = false; // denotes whether to transmit location or not
-var getFlag = false; // denotes whether to get locations from webservice or not
-var updateFlag = false; // denotes whether to call the update function or not
-var pauseFlag = false;
+// define global Application object
+var app = null;
 
 // Wait for PhoneGap to load
 document.addEventListener("deviceready", onDeviceReady, false);
 
 // PhoneGap is ready, set device UUID
 function onDeviceReady() {
-	application.deviceUuid = device.uuid;
-	application.platform = device.platform;
+	// check objects
+	if (app === null) {
+		// initialize app with device id and platform
+		app = new Application(device.uuid, device.platform);	
+	}
 	
 	document.addEventListener("pause", onAppPaused, false);
 	document.addEventListener("resume", onAppResumed, false);
 }
 
 function onAppPaused() {
-	pauseFlag = true;
+	app.pause();
 	navigator.geolocation.clearWatch(geoWatcher);
 	geoWatcher = false;
 }
 
 function onAppResumed() {
-	pauseFlag = false;
+	app.unpause();
 	update();
 }
 
 $(function() {
 	// on ready
-	if(application.deviceUuid == "") {
-		application.deviceUuid = hex_md5(navigator.userAgent);
+	
+	// check objects
+	if (app === null) {
+		// initialize app with device id and platform
+		app = new Application(hex_md5(navigator.userAgent), 'browser');	
 	}
-	if(application.platform == "") {
-		application.platform = "browser";
-	}
+
 });
 
 /*
@@ -66,16 +64,20 @@ $(function() {
 function broadcastButton() {
 	// clear error state notification
 	$('#errorLabel').text('');
+	
+	// validate code
+	var inputCode = $("#startForm #broadcastCode").val();	
+	if(inputCode == "") {
+		return JSON.stringify({
+			"error": 'Invalid code. Must be between 1 and 64 characters.'
+		});	
+	}
 
-	// get input data as json
-	var inputData = broadcastJSONData();
-	var response = JSON.parse(inputData);
-	if(response.error == undefined) { // no error, let's do it!
-		// create broadcast and load token
-		createBroadcast(inputData);
-	} else {
-		// error on input data
-		$('#errorLabel').text('Error: ' + response.error);
+	try {
+		app.startBroadcast(inputCode);
+	} catch(e) {
+		console.log('error creating broadcast: ' + e);
+		$('#errorLabel').text('Error: ' + e);
 	}
 }
 
@@ -89,12 +91,19 @@ function watchButton() {
 
 	if(key == ""){
 		// error on input data
-		$('#errorLabel').text('Error: Key needs to be supplied');    	
+		$('#errorLabel').text('Error: Key needs to be supplied');
+		return;
 	} else if(code == "") {
 		// error on input data
 		$('#errorLabel').text('Error: Code needs to be supplied');
-	} else {
-		getToken(key, code);
+		return;
+	} 
+	
+	try {
+		app.watchBroadcast(key, code);
+	} catch(e) {
+		console.log('error creating broadcast: ' + e);
+		$('#errorLabel').text('Error: ' + e);
 	}
 	
 }
@@ -514,13 +523,6 @@ function broadcastJSONData() {
 		});		
 	}
 	
-	// validate code
-	var inputCode = $("#startForm #broadcastCode").val();	
-	if(inputCode == "") {
-		return JSON.stringify({
-			"error": 'Invalid code. Must be between 1 and 64 characters.'
-		});	
-	}
 
 	// both validated, return JSON object
 	return JSON.stringify({

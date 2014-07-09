@@ -117,9 +117,9 @@ function findByName($query) {
  
 function getConnection() {
     $dbhost="localhost";
-    $dbuser="databyss_watch";
-    $dbpass="watchdbapp43";
-    $dbname="databyss_watch";
+    $dbuser="db_user";
+    $dbpass="db_pass";
+    $dbname="db_watch";
     $dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $dbh;

@@ -20,9 +20,9 @@ $app->run();
 // Helper function
 function getConnection() {
     $dbhost="localhost";
-    $dbuser="databyss";
-    $dbpass="dotnet";
-    $dbname="databyss_watchme";
+    $dbuser="db_user";
+    $dbpass="db_pass";
+    $dbname="db_watchme";
     $dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $dbh;
